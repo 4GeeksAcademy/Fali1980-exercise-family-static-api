@@ -50,6 +50,26 @@ def create_member():
 
     return jsonify(response_body), 200
 
+
+@app.route('/member/<int:id>', methods=['GET'])
+def get_member(id):
+
+    member = jackson_family.get_member(id)
+    if member is None:
+        return jsonify({"Message" : "No matching members found"}), 404
+
+    return jsonify(member), 200
+
+@app.route('/member/<int:id>', methods=['DELETE'])
+def delete_member(id):
+    members = jackson_family.get_all_members()
+    member = jackson_family.get_member(id)
+    if member is None:
+        return jsonify({"Message" : "Bad Request"}), 400
+    jackson_family.delete_member(id)
+    return jsonify({ "done" : True }), 200
+    # return jsonify(members)
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
